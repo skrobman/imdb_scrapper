@@ -1,0 +1,167 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  movie_id     String   @id @default(uuid())
+  rank         Int
+  movie_title  String   @unique
+  year         Int      @db.SmallInt
+  release_date DateTime @db.Date
+  imdb_rating  Decimal  @db.Decimal(3, 1)
+  runtime      Int      @db.SmallInt
+  archived     Boolean
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  financial MovieFinancial?
+  directors MovieDirector[]
+  countries MovieCountry[]
+  languages MovieLanguage[]
+  genres    MovieGenre[]
+  writers   MovieWriter[]
+  actors    MovieActor[]
+}
+
+model MovieFinancial {
+  movie_id        String   @id
+  budget          BigInt
+  opening_weekend BigInt
+  gross_worldwide BigInt
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  movie Movie @relation(fields: [movie_id], references: [movie_id])
+}
+
+model Director {
+  director_id   String   @id @default(uuid())
+  director_name String   @unique
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  movies MovieDirector[]
+}
+
+model MovieDirector {
+  movie_id    String
+  director_id String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  movie    Movie    @relation(fields: [movie_id], references: [movie_id])
+  director Director @relation(fields: [director_id], references: [director_id])
+
+  @@id([movie_id, director_id])
+}
+
+model Country {
+  country_id   String   @id @default(uuid())
+  country_name String   @unique
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  movies MovieCountry[]
+}
+
+model MovieCountry {
+  movie_id   String
+  country_id String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  movie   Movie   @relation(fields: [movie_id], references: [movie_id])
+  country Country @relation(fields: [country_id], references: [country_id])
+
+  @@id([movie_id, country_id])
+}
+
+model Language {
+  language_id String   @id @default(uuid())
+  language    String   @unique
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  movies MovieLanguage[]
+}
+
+model MovieLanguage {
+  movie_id    String
+  language_id String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  movie    Movie    @relation(fields: [movie_id], references: [movie_id])
+  language Language @relation(fields: [language_id], references: [language_id])
+
+  @@id([movie_id, language_id])
+}
+
+model Genre {
+  genre_id   String   @id @default(uuid())
+  genre_name String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  movies MovieGenre[]
+}
+
+model MovieGenre {
+  movie_id   String
+  genre_id   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  movie Movie @relation(fields: [movie_id], references: [movie_id])
+  genre Genre @relation(fields: [genre_id], references: [genre_id])
+
+  @@id([movie_id, genre_id])
+}
+
+model Writer {
+  writer_id   String   @id @default(uuid())
+  writer_name String   @unique
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  movies MovieWriter[]
+}
+
+model MovieWriter {
+  movie_id   String
+  writer_id  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  movie  Movie  @relation(fields: [movie_id], references: [movie_id])
+  writer Writer @relation(fields: [writer_id], references: [writer_id])
+
+  @@id([movie_id, writer_id])
+}
+
+model Actor {
+  actor_id   String   @id @default(uuid())
+  actor_name String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  movies MovieActor[]
+}
+
+model MovieActor {
+  movie_id   String
+  actor_id   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  movie Movie @relation(fields: [movie_id], references: [movie_id])
+  actor Actor @relation(fields: [actor_id], references: [actor_id])
+
+  @@id([movie_id, actor_id])
+}
