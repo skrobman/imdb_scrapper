@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { PuppeteerService } from './puppeteer.service';
-import { ScrappedTopCastType } from '../../types/scrapped-top-cast.type';
+import { PuppeteerService } from '../puppeteer.service';
+import { ScrappedPeoplesType } from '../../../types/scrapped-peoples.type';
+import { Page } from 'puppeteer';
 
 @Injectable()
 export class TopCastScrapperService {
   constructor(private puppeteerService: PuppeteerService) {}
 
-  async scrapeTopCast(filmUrl: string): Promise<ScrappedTopCastType[]> {
-    const page = await this.puppeteerService.newPage();
-    await page.goto(filmUrl, { waitUntil: 'networkidle0', timeout: 30_000 });
+  async scrapeTopCast(page: Page): Promise<ScrappedPeoplesType[]> {
 
     // Ждём появления любого элемента топ-каста (div внутри секции)
     const hasCastSection = await page.$('section[data-testid="title-cast"]');
@@ -31,7 +30,6 @@ export class TopCastScrapperService {
           .filter((actor) => actor.full_name)
     );
 
-    await page.close();
     return cast;
   }
 }

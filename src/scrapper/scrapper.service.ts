@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { FilmScrapperService } from './services/film-scrapper.service';
-import { DirectorScraperService } from './services/director-scrape.service';
+import { FilmScrapperService } from './services/FilmScrapeService/film-scrapper.service';
+import { DirectorScraperService } from './services/DirectorScrapeService/director-scrape.service';
 import { ScrappedMovieType } from '../types/scrapped-movie.type';
-import { WritersScrapperService } from './services/writers-scrapper.service';
+import { WritersScrapperService } from './services/WritersScrapeService/writers-scrapper.service';
 import pLimit from 'p-limit';
-import { TopCastScrapperService } from './services/top-cast-scrapper.service';
+import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
+import { PuppeteerService } from './services/puppeteer.service';
+import { Page } from 'puppeteer';
 
 @Injectable()
 export class ScrapperService {
@@ -13,27 +15,41 @@ export class ScrapperService {
     private readonly directorScrapper: DirectorScraperService,
     private readonly writersScrapper: WritersScrapperService,
     private readonly topCastScrapper: TopCastScrapperService,
+    private readonly puppeteerService: PuppeteerService,
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
     const films = await this.filmScrapper.scrapeTopFilms();
-    const limit = pLimit(5)
+    const limit = pLimit(5);
 
     await Promise.all(
-      films.map(film =>
+      films.map((film) =>
         limit(async () => {
           if (film.url) {
-            const [directors, writers, topCast] = await Promise.all([
-              this.directorScrapper.scrapeDirectors(film.url),
-              this.writersScrapper.scrapeWriters(film.url),
-              this.topCastScrapper.scrapeTopCast(film.url)
-            ]);
-            film.directors = directors;
-            film.writers = writers;
-            film.topCast = topCast;
+            const page: Page = await this.puppeteerService.newPage();
+            try {
+              await page.goto(film.url, { waitUntil: 'networkidle0', timeout: 30_000 });
+
+              // Каждый парсер работает с одной и той же страницей
+              const [directors, writers, topCast] = await Promise.all([
+                this.directorScrapper.scrapeDirectors(page),
+                this.writersScrapper.scrapeWriters(page),
+                this.topCastScrapper.scrapeTopCast(page),
+              ]);
+              film.directors = directors;
+              film.writers = writers;
+              film.topCast = topCast;
+            } catch (e) {
+              // Логировать ошибку можно здесь
+              film.directors = [];
+              film.writers = [];
+              film.topCast = [];
+            } finally {
+              await page.close();
+            }
           }
-        })
-      )
+        }),
+      ),
     );
 
     return films;

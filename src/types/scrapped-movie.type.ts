@@ -1,6 +1,5 @@
 import { ScrappedDirectorType } from './scrapped-director.type';
-import { ScrappedWritersType } from './scrapped-writers.type';
-import { ScrappedTopCastType } from './scrapped-top-cast.type';
+import { ScrappedPeoplesType } from './scrapped-peoples.type';
 
 export type ScrappedMovieType = {
   rank: number;
@@ -11,6 +10,6 @@ export type ScrappedMovieType = {
   imdbRating: number;
   url: string | null;
   directors: ScrappedDirectorType[];
-  writers: ScrappedWritersType[];
-  topCast: ScrappedTopCastType[];
+  writers: ScrappedPeoplesType[];
+  topCast: ScrappedPeoplesType[];
 };
