@@ -4,14 +4,16 @@ import { ScrapperController } from './scrapper.controller';
 import { PuppeteerService } from './services/puppeteer.service';
 import { FilmScrapperService } from './services/film-scrapper.service';
 import { DirectorScraperService } from './services/director-scrape.service';
-import { GenreScrapperService } from './services/genre-scrapper.service';
+import { WritersScrapperService } from './services/writers-scrapper.service';
+import { TopCastScrapperService } from './services/top-cast-scrapper.service';
 
 @Module({
   providers: [
     PuppeteerService,
     FilmScrapperService,
     DirectorScraperService,
-    GenreScrapperService,
+    WritersScrapperService,
+    TopCastScrapperService,
     ScrapperService,
   ],
   controllers: [ScrapperController],

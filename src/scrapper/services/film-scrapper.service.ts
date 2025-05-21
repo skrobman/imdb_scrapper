@@ -10,6 +10,12 @@ export class FilmScrapperService {
   async scrapeTopFilms(): Promise<ScrappedMovieType[]> {
     const page = await this.puppeteerService.newPage();
 
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
+      'AppleWebKit/537.36 (KHTML, like Gecko) ' +
+      'Chrome/114.0.0.0 Safari/537.36'
+    );
+
     await page.goto('https://www.imdb.com/chart/moviemeter/', {
       waitUntil: 'networkidle2',
       timeout: 30_000,
@@ -65,7 +71,8 @@ export class FilmScrapperService {
               filmRatingSystem: metaEls[2].textContent!.trim(),
               imdbRating,
               directors: [],
-              genres: [],
+              writers: [],
+              topCast: []
             };
           })
           .filter(Boolean),
