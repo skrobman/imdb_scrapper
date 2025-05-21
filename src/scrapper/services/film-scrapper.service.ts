@@ -65,6 +65,7 @@ export class FilmScrapperService {
               filmRatingSystem: metaEls[2].textContent!.trim(),
               imdbRating,
               directors: [],
+              genres: [],
             };
           })
           .filter(Boolean),

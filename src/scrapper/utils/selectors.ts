@@ -7,4 +7,5 @@ export const Selectors = {
   metadataItem: '.cli-title-metadata-item',
   imdbRating: 'span.ipc-rating-star--rating',
   directorList: 'li[data-testid="title-pc-principal-credit"]:nth-child(1) a',
+  genreList: 'li[data-testid="storyline-genres"] a'
 }
