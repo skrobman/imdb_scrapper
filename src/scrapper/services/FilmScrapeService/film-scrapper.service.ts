@@ -76,6 +76,7 @@ export class FilmScrapperService {
               // genres: []
               releaseDate: null,
               releaseCountry: null,
+              languages: []
             };
           })
           .filter(Boolean),

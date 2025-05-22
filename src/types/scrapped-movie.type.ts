@@ -16,4 +16,5 @@ export type ScrappedMovieType = {
   // genres: ScrappedGenresType[];
   releaseDate: string | null;
   releaseCountry: string | null;
+  languages: string[]
 };

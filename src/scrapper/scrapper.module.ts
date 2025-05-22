@@ -7,6 +7,7 @@ import { DirectorScraperService } from './services/DirectorScrapeService/directo
 import { WritersScrapperService } from './services/WritersScrapeService/writers-scrapper.service';
 import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
 import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
+import { LanguagesScrapperService } from './services/LanguagesScrapeService/languages-scrape.service';
 
 @Module({
   providers: [
@@ -16,6 +17,7 @@ import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/relea
     WritersScrapperService,
     TopCastScrapperService,
     ReleaseDateScrapperService,
+    LanguagesScrapperService,
     ScrapperService,
   ],
   controllers: [ScrapperController],
