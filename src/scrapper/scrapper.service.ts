@@ -7,6 +7,7 @@ import pLimit from 'p-limit';
 import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
 import { PuppeteerService } from './services/puppeteer.service';
 import { Page } from 'puppeteer';
+import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
 
 @Injectable()
 export class ScrapperService {
@@ -16,6 +17,7 @@ export class ScrapperService {
     private readonly writersScrapper: WritersScrapperService,
     private readonly topCastScrapper: TopCastScrapperService,
     private readonly puppeteerService: PuppeteerService,
+    private readonly releaseDateService: ReleaseDateScrapperService,
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
@@ -30,20 +32,23 @@ export class ScrapperService {
             try {
               await page.goto(film.url, { waitUntil: 'networkidle0', timeout: 30_000 });
 
-              // Каждый парсер работает с одной и той же страницей
-              const [directors, writers, topCast] = await Promise.all([
+              const [directors, writers, topCast, releaseInfo] = await Promise.all([
                 this.directorScrapper.scrapeDirectors(page),
                 this.writersScrapper.scrapeWriters(page),
                 this.topCastScrapper.scrapeTopCast(page),
+                this.releaseDateService.scrapeReleaseDate(page),
               ]);
               film.directors = directors;
               film.writers = writers;
               film.topCast = topCast;
+              film.releaseDate = releaseInfo.date;
+              film.releaseCountry = releaseInfo.country;
             } catch (e) {
-              // Логировать ошибку можно здесь
               film.directors = [];
               film.writers = [];
               film.topCast = [];
+              film.releaseDate = null;
+              film.releaseCountry = null;
             } finally {
               await page.close();
             }

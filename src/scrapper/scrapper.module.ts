@@ -6,6 +6,7 @@ import { FilmScrapperService } from './services/FilmScrapeService/film-scrapper.
 import { DirectorScraperService } from './services/DirectorScrapeService/director-scrape.service';
 import { WritersScrapperService } from './services/WritersScrapeService/writers-scrapper.service';
 import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
+import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
 
 @Module({
   providers: [
@@ -14,6 +15,7 @@ import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast
     DirectorScraperService,
     WritersScrapperService,
     TopCastScrapperService,
+    ReleaseDateScrapperService,
     ScrapperService,
   ],
   controllers: [ScrapperController],

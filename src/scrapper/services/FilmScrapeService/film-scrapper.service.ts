@@ -72,7 +72,10 @@ export class FilmScrapperService {
               imdbRating,
               directors: [],
               writers: [],
-              topCast: []
+              topCast: [],
+              // genres: []
+              releaseDate: null,
+              releaseCountry: null,
             };
           })
           .filter(Boolean),

@@ -17,7 +17,7 @@ export class TopCastScrapperService {
     }
 
     // Парсим имена актёров из div'ов с data-testid="title-cast-item"
-    const cast = await page.$$eval(
+    return await page.$$eval(
       'section[data-testid="title-cast"] [data-testid="title-cast-item"]',
       (items) =>
         items
@@ -29,7 +29,5 @@ export class TopCastScrapperService {
           })
           .filter((actor) => actor.full_name)
     );
-
-    return cast;
   }
 }
