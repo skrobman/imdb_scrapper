@@ -14,6 +14,7 @@ import { CountriesScrapperService } from './services/CountriesOfOriginScrapeServ
 import {
   ProductionCompaniesScrapperService
 } from './services/ProductionCompaniesScrapperService/production-companies-scrapper.service';
+import { BudgetScrapperService } from './services/BudgetScrapeService/budget-scrape.service';
 
 @Injectable()
 export class ScrapperService {
@@ -28,6 +29,7 @@ export class ScrapperService {
     private readonly filmLocations: FilmLocationsScrapeService,
     private readonly countriesService: CountriesScrapperService,
     private readonly productionsCompaniesService: ProductionCompaniesScrapperService,
+    private readonly budgetScrapper: BudgetScrapperService, // Add this line
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
@@ -42,7 +44,17 @@ export class ScrapperService {
             try {
               await page.goto(film.url, { waitUntil: 'networkidle0', timeout: 30_000 });
 
-              const [directors, writers, topCast, releaseInfo, languages, filmLocations, countriesOfOrigin, productionCompanies] = await Promise.all([
+              const [
+                directors,
+                writers,
+                topCast,
+                releaseInfo,
+                languages,
+                filmLocations,
+                countriesOfOrigin,
+                productionCompanies,
+                financials, // Add financials to the Promise.all
+              ] = await Promise.all([
                 this.directorScrapper.scrapeDirectors(page),
                 this.writersScrapper.scrapeWriters(page),
                 this.topCastScrapper.scrapeTopCast(page),
@@ -51,6 +63,7 @@ export class ScrapperService {
                 this.filmLocations.scrapeFilmingLocations(page),
                 this.countriesService.scrapeCountries(page),
                 this.productionsCompaniesService.scrapeProductionCompanies(page),
+                this.budgetScrapper.scrapeFinancials(page), // Add this call
               ]);
               film.directors = directors;
               film.writers = writers;
@@ -61,6 +74,7 @@ export class ScrapperService {
               film.filmLocations = filmLocations;
               film.countriesOfOrigin = countriesOfOrigin;
               film.productionCompanies = productionCompanies;
+              film.financials = financials; // Assign scraped financials
             } catch (e) {
               film.directors = [];
               film.writers = [];
@@ -70,6 +84,12 @@ export class ScrapperService {
               film.filmLocations = null;
               film.countriesOfOrigin = [];
               film.productionCompanies = [];
+              film.financials = {
+                budget: null,
+                grossUSCanada: null,
+                openingWeekendUSCanada: null,
+                grossWorldwide: null,
+              };
             } finally {
               await page.close();
             }

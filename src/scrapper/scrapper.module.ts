@@ -13,6 +13,7 @@ import { CountriesScrapperService } from './services/CountriesOfOriginScrapeServ
 import {
   ProductionCompaniesScrapperService
 } from './services/ProductionCompaniesScrapperService/production-companies-scrapper.service';
+import { BudgetScrapperService } from './services/BudgetScrapeService/budget-scrape.service';
 
 @Module({
   providers: [
@@ -26,6 +27,7 @@ import {
     FilmLocationsScrapeService,
     CountriesScrapperService,
     ProductionCompaniesScrapperService,
+    BudgetScrapperService,
     ScrapperService,
   ],
   controllers: [ScrapperController],

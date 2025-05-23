@@ -79,6 +79,12 @@ export class FilmScrapperService {
               filmLocations: null,
               countriesOfOrigin: [],
               productionCompanies: [],
+              financials: {
+                budget: null,
+                grossUSCanada: null,
+                openingWeekendUSCanada: null,
+                grossWorldwide: null,
+              },
             };
           })
           .filter(Boolean),
