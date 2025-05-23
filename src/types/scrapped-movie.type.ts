@@ -1,6 +1,5 @@
 import { ScrappedDirectorType } from './scrapped-director.type';
 import { ScrappedPeoplesType } from './scrapped-peoples.type';
-import { ScrappedGenresType } from './scrapped-genres.type';
 
 export type ScrappedMovieType = {
   rank: number;
@@ -13,10 +12,10 @@ export type ScrappedMovieType = {
   directors: ScrappedDirectorType[];
   writers: ScrappedPeoplesType[];
   topCast: ScrappedPeoplesType[];
-  // genres: ScrappedGenresType[];
   releaseDate: string | null;
   releaseCountry: string | null;
   languages: string[];
   filmLocations: string | null;
   countriesOfOrigin: string[];
+  productionCompanies: string[];
 };

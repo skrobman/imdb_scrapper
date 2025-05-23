@@ -10,6 +10,9 @@ import { LanguagesScrapperService } from './services/LanguagesScrapeService/lang
 import { FilmLocationsScrapeService } from './services/FilmLocationsScrapeService/film-locations-scrape.service';
 import { ReleaseDateScrapperService } from './services/DateReleaseScrapperService/release-date-scrapper.service';
 import { CountriesScrapperService } from './services/CountriesOfOriginScrapeService/countries-of-origin-scrape.service';
+import {
+  ProductionCompaniesScrapperService
+} from './services/ProductionCompaniesScrapperService/production-companies-scrapper.service';
 
 @Module({
   providers: [
@@ -22,6 +25,7 @@ import { CountriesScrapperService } from './services/CountriesOfOriginScrapeServ
     LanguagesScrapperService,
     FilmLocationsScrapeService,
     CountriesScrapperService,
+    ProductionCompaniesScrapperService,
     ScrapperService,
   ],
   controllers: [ScrapperController],

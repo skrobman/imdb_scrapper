@@ -73,12 +73,12 @@ export class FilmScrapperService {
               directors: [],
               writers: [],
               topCast: [],
-              // genres: []
               releaseDate: null,
               releaseCountry: null,
               languages: [],
               filmLocations: null,
               countriesOfOrigin: [],
+              productionCompanies: [],
             };
           })
           .filter(Boolean),
