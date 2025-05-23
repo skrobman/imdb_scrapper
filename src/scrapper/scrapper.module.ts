@@ -8,6 +8,7 @@ import { WritersScrapperService } from './services/WritersScrapeService/writers-
 import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
 import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
 import { LanguagesScrapperService } from './services/LanguagesScrapeService/languages-scrape.service';
+import { FilmLocationsScrapeService } from './services/FilmLocationsScrapeService/film-locations-scrape.service';
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { LanguagesScrapperService } from './services/LanguagesScrapeService/lang
     TopCastScrapperService,
     ReleaseDateScrapperService,
     LanguagesScrapperService,
+    FilmLocationsScrapeService,
     ScrapperService,
   ],
   controllers: [ScrapperController],

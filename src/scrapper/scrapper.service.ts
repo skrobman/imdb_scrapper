@@ -9,6 +9,7 @@ import { PuppeteerService } from './services/puppeteer.service';
 import { Page } from 'puppeteer';
 import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
 import { LanguagesScrapperService } from './services/LanguagesScrapeService/languages-scrape.service';
+import { FilmLocationsScrapeService } from './services/FilmLocationsScrapeService/film-locations-scrape.service';
 
 @Injectable()
 export class ScrapperService {
@@ -20,6 +21,7 @@ export class ScrapperService {
     private readonly puppeteerService: PuppeteerService,
     private readonly releaseDateService: ReleaseDateScrapperService,
     private readonly languagesService: LanguagesScrapperService,
+    private readonly filmLocations: FilmLocationsScrapeService
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
@@ -34,12 +36,13 @@ export class ScrapperService {
             try {
               await page.goto(film.url, { waitUntil: 'networkidle0', timeout: 30_000 });
 
-              const [directors, writers, topCast, releaseInfo, languages] = await Promise.all([
+              const [directors, writers, topCast, releaseInfo, languages, filmLocations] = await Promise.all([
                 this.directorScrapper.scrapeDirectors(page),
                 this.writersScrapper.scrapeWriters(page),
                 this.topCastScrapper.scrapeTopCast(page),
                 this.releaseDateService.scrapeReleaseDate(page),
-                this.languagesService.scrapeLanguages(page)
+                this.languagesService.scrapeLanguages(page),
+                this.filmLocations.scrapeFilmingLocations(page)
               ]);
               film.directors = directors;
               film.writers = writers;
@@ -47,12 +50,14 @@ export class ScrapperService {
               film.releaseDate = releaseInfo.date;
               film.releaseCountry = releaseInfo.country;
               film.languages = languages;
+              film.filmLocations = filmLocations;
             } catch (e) {
               film.directors = [];
               film.writers = [];
               film.topCast = [];
               film.releaseDate = null;
               film.releaseCountry = null;
+              film.filmLocations = null;
             } finally {
               await page.close();
             }
