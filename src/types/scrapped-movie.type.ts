@@ -18,4 +18,5 @@ export type ScrappedMovieType = {
   releaseCountry: string | null;
   languages: string[];
   filmLocations: string | null;
+  countriesOfOrigin: string[];
 };

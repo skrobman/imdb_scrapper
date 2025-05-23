@@ -78,6 +78,7 @@ export class FilmScrapperService {
               releaseCountry: null,
               languages: [],
               filmLocations: null,
+              countriesOfOrigin: [],
             };
           })
           .filter(Boolean),

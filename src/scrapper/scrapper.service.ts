@@ -7,9 +7,10 @@ import pLimit from 'p-limit';
 import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
 import { PuppeteerService } from './services/puppeteer.service';
 import { Page } from 'puppeteer';
-import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
 import { LanguagesScrapperService } from './services/LanguagesScrapeService/languages-scrape.service';
 import { FilmLocationsScrapeService } from './services/FilmLocationsScrapeService/film-locations-scrape.service';
+import { ReleaseDateScrapperService } from './services/DateReleaseScrapperService/release-date-scrapper.service';
+import { CountriesScrapperService } from './services/CountriesOfOriginScrapeService/countries-of-origin-scrape.service';
 
 @Injectable()
 export class ScrapperService {
@@ -21,7 +22,8 @@ export class ScrapperService {
     private readonly puppeteerService: PuppeteerService,
     private readonly releaseDateService: ReleaseDateScrapperService,
     private readonly languagesService: LanguagesScrapperService,
-    private readonly filmLocations: FilmLocationsScrapeService
+    private readonly filmLocations: FilmLocationsScrapeService,
+    private readonly countriesService: CountriesScrapperService,
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
@@ -36,13 +38,14 @@ export class ScrapperService {
             try {
               await page.goto(film.url, { waitUntil: 'networkidle0', timeout: 30_000 });
 
-              const [directors, writers, topCast, releaseInfo, languages, filmLocations] = await Promise.all([
+              const [directors, writers, topCast, releaseInfo, languages, filmLocations, countriesOfOrigin] = await Promise.all([
                 this.directorScrapper.scrapeDirectors(page),
                 this.writersScrapper.scrapeWriters(page),
                 this.topCastScrapper.scrapeTopCast(page),
                 this.releaseDateService.scrapeReleaseDate(page),
                 this.languagesService.scrapeLanguages(page),
-                this.filmLocations.scrapeFilmingLocations(page)
+                this.filmLocations.scrapeFilmingLocations(page),
+                this.countriesService.scrapeCountries(page),
               ]);
               film.directors = directors;
               film.writers = writers;
@@ -51,6 +54,7 @@ export class ScrapperService {
               film.releaseCountry = releaseInfo.country;
               film.languages = languages;
               film.filmLocations = filmLocations;
+              film.countriesOfOrigin = countriesOfOrigin;
             } catch (e) {
               film.directors = [];
               film.writers = [];
@@ -58,6 +62,7 @@ export class ScrapperService {
               film.releaseDate = null;
               film.releaseCountry = null;
               film.filmLocations = null;
+              film.countriesOfOrigin = [];
             } finally {
               await page.close();
             }

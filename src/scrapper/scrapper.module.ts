@@ -6,9 +6,10 @@ import { FilmScrapperService } from './services/FilmScrapeService/film-scrapper.
 import { DirectorScraperService } from './services/DirectorScrapeService/director-scrape.service';
 import { WritersScrapperService } from './services/WritersScrapeService/writers-scrapper.service';
 import { TopCastScrapperService } from './services/TopCastScrapeService/top-cast-scrapper.service';
-import { ReleaseDateScrapperService } from './services/DateReleaseScrapper/release-date-scrapper.service';
 import { LanguagesScrapperService } from './services/LanguagesScrapeService/languages-scrape.service';
 import { FilmLocationsScrapeService } from './services/FilmLocationsScrapeService/film-locations-scrape.service';
+import { ReleaseDateScrapperService } from './services/DateReleaseScrapperService/release-date-scrapper.service';
+import { CountriesScrapperService } from './services/CountriesOfOriginScrapeService/countries-of-origin-scrape.service';
 
 @Module({
   providers: [
@@ -20,6 +21,7 @@ import { FilmLocationsScrapeService } from './services/FilmLocationsScrapeServic
     ReleaseDateScrapperService,
     LanguagesScrapperService,
     FilmLocationsScrapeService,
+    CountriesScrapperService,
     ScrapperService,
   ],
   controllers: [ScrapperController],
