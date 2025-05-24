@@ -16,11 +16,21 @@ export class ReleaseDateScrapperService {
 
         const raw = dateAnchor.textContent?.trim() ?? '';
 
+        let isoDate: string | null = null;
+
         const dateMatch = raw.match(/^(.+?)\s+\(/);
+        if (dateMatch) {
+          const dateStr = dateMatch[1];
+          const dateObj = new Date(dateStr);
+          if (!isNaN(dateObj.getTime())) {
+            isoDate = dateObj.toISOString().split('T')[0];
+          }
+        }
+
         const countryMatch = raw.match(/\(([^)]+)\)/);
 
         return {
-          date: dateMatch ? dateMatch[1].trim() : raw,
+          date: isoDate,
           country: countryMatch ? countryMatch[1].trim() : null
         };
       }
