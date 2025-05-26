@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { FilmScrapperService } from './services/FilmScrapeService/film-scrapper.service';
 import { DirectorScraperService } from './services/DirectorScrapeService/director-scrape.service';
 import { ScrappedMovieType } from '../types/scrapped-movie.type';
@@ -15,9 +15,13 @@ import {
   ProductionCompaniesScrapperService
 } from './services/ProductionCompaniesScrapperService/production-companies-scrapper.service';
 import { BudgetScrapperService } from './services/BudgetScrapeService/budget-scrape.service';
+import Redis from 'ioredis';
 
 @Injectable()
 export class ScrapperService {
+  private readonly CACHE_KEY = 'scrapped-films';
+  private readonly CACHE_TTL = 600;
+
   constructor(
     private readonly filmScrapper: FilmScrapperService,
     private readonly directorScrapper: DirectorScraperService,
@@ -29,10 +33,18 @@ export class ScrapperService {
     private readonly filmLocations: FilmLocationsScrapeService,
     private readonly countriesService: CountriesScrapperService,
     private readonly productionsCompaniesService: ProductionCompaniesScrapperService,
-    private readonly budgetScrapper: BudgetScrapperService, // Add this line
+    private readonly budgetScrapper: BudgetScrapperService,
+
+    @Inject('REDIS_CLIENT')
+    private readonly redisClient: Redis,
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
+    const cached = await this.redisClient.get(this.CACHE_KEY);
+    if(cached){
+      return JSON.parse(cached) as ScrappedMovieType[];
+    }
+
     const films = await this.filmScrapper.scrapeTopFilms();
     const limit = pLimit(5);
 
@@ -96,6 +108,13 @@ export class ScrapperService {
           }
         }),
       ),
+    );
+
+    await this.redisClient.set(
+      this.CACHE_KEY,
+      JSON.stringify(films),
+      'EX',
+      this.CACHE_TTL,
     );
 
     return films;

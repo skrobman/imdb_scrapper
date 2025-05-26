@@ -7,23 +7,12 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      chrome:
-        condition: service_started
       db:
         condition: service_healthy
 
     environment:
       - CHROME_WS_URL=ws://chrome:3000
       - DATABASE_URL=${DATABASE_URL}
-
-
-  chrome:
-    image: browserless/chrome
-    container_name: chrome
-    ports:
-      - "3001:3000"
-    restart: unless-stopped
-
 
   db:
     image: postgres:15
