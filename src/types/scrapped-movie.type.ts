@@ -1,6 +1,5 @@
 import { ScrappedDirectorType } from './scrapped-director.type';
 import { ScrappedPeoplesType } from './scrapped-peoples.type';
-import { Financials } from '../scrapper/services/BudgetScrapeService/budget-scrape.service';
 
 export type ScrappedMovieType = {
   rank: number;
@@ -19,5 +18,8 @@ export type ScrappedMovieType = {
   filmLocations: string | null;
   countriesOfOrigin: string[];
   productionCompanies: string[];
-  financials: Financials;
+  budget: number | null,
+  grossUSCanada: number | null,
+  openingWeekendUSCanada: number | null,
+  grossWorldwide: number | null
 };

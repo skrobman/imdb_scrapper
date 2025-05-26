@@ -14,8 +14,8 @@ import { CountriesScrapperService } from './services/CountriesOfOriginScrapeServ
 import {
   ProductionCompaniesScrapperService
 } from './services/ProductionCompaniesScrapperService/production-companies-scrapper.service';
-import { BudgetScrapperService } from './services/BudgetScrapeService/budget-scrape.service';
 import Redis from 'ioredis';
+import { BudgetScrapperService } from './services/BudgetScrapeService/budget-scrape.service';
 
 @Injectable()
 export class ScrapperService {
@@ -41,7 +41,7 @@ export class ScrapperService {
 
   async getFilms(): Promise<ScrappedMovieType[]> {
     const cached = await this.redisClient.get(this.CACHE_KEY);
-    if(cached){
+    if (cached) {
       return JSON.parse(cached) as ScrappedMovieType[];
     }
 
@@ -65,7 +65,10 @@ export class ScrapperService {
                 filmLocations,
                 countriesOfOrigin,
                 productionCompanies,
-                financials, // Add financials to the Promise.all
+                budget,
+                grossUSCanada,
+                openingWeekendUSCanada,
+                grossWorldwide,
               ] = await Promise.all([
                 this.directorScrapper.scrapeDirectors(page),
                 this.writersScrapper.scrapeWriters(page),
@@ -75,8 +78,12 @@ export class ScrapperService {
                 this.filmLocations.scrapeFilmingLocations(page),
                 this.countriesService.scrapeCountries(page),
                 this.productionsCompaniesService.scrapeProductionCompanies(page),
-                this.budgetScrapper.scrapeFinancials(page), // Add this call
+                this.budgetScrapper.scrapeBudget(page),
+                this.budgetScrapper.scrapeGrossUSCanada(page),
+                this.budgetScrapper.scrapeOpeningWeekendUSCanada(page),
+                this.budgetScrapper.scrapeGrossWorldwide(page),
               ]);
+
               film.directors = directors;
               film.writers = writers;
               film.topCast = topCast;
@@ -86,7 +93,10 @@ export class ScrapperService {
               film.filmLocations = filmLocations;
               film.countriesOfOrigin = countriesOfOrigin;
               film.productionCompanies = productionCompanies;
-              film.financials = financials; // Assign scraped financials
+              film.budget = budget;
+              film.grossUSCanada = grossUSCanada;
+              film.openingWeekendUSCanada = openingWeekendUSCanada;
+              film.grossWorldwide = grossWorldwide;
             } catch (e) {
               film.directors = [];
               film.writers = [];
@@ -96,12 +106,10 @@ export class ScrapperService {
               film.filmLocations = null;
               film.countriesOfOrigin = [];
               film.productionCompanies = [];
-              film.financials = {
-                budget: null,
-                grossUSCanada: null,
-                openingWeekendUSCanada: null,
-                grossWorldwide: null,
-              };
+              film.budget = null;
+              film.grossUSCanada = null;
+              film.openingWeekendUSCanada = null;
+              film.grossWorldwide = null;
             } finally {
               await page.close();
             }

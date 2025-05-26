@@ -16,7 +16,7 @@ export class FilmScrapperService {
       //'Chrome/114.0.0.0 Safari/537.36'
     //);
 
-    await page.goto('https://www.imdb.com/chart/moviemeter/', {
+    await page.goto('https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm', {
       waitUntil: 'networkidle2',
       timeout: 30_000,
     });
@@ -79,12 +79,10 @@ export class FilmScrapperService {
               filmLocations: null,
               countriesOfOrigin: [],
               productionCompanies: [],
-              financials: {
-                budget: null,
-                grossUSCanada: null,
-                openingWeekendUSCanada: null,
-                grossWorldwide: null,
-              },
+              budget: null,
+              grossUSCanada: null,
+              openingWeekendUSCanada: null,
+              grossWorldwide: null,
             };
           })
           .filter(Boolean),

@@ -1,65 +1,101 @@
 import { Injectable } from '@nestjs/common';
 import { Page } from 'puppeteer';
 
-export type Financials = {
-  budget: number | null;
-  grossUSCanada: number | null;
-  openingWeekendUSCanada: number | null;
-  grossWorldwide: number | null;
-};
-
 @Injectable()
 export class BudgetScrapperService {
-  async scrapeFinancials(page: Page): Promise<Financials> {
-    await page.waitForSelector('[data-testid="title-boxoffice-section"]', { timeout: 15000 })
-      .catch(() => null);
+  async scrapeBudget(page: Page): Promise<number | null> {
+    await page.waitForSelector('[data-testid="title-boxoffice-section"]', { timeout: 15000 }).catch(() => null);
 
-    return await page.$$eval(
+    return page.$$eval(
       '[data-testid="title-boxoffice-section"] .ipc-metadata-list__item',
       (items) => {
-        const res: Financials = {
-          budget: null,
-          grossUSCanada: null,
-          openingWeekendUSCanada: null,
-          grossWorldwide: null,
-        };
-
         const extractNumber = (text: string): number | null => {
           const match = text.match(/[\d,]+/);
           if (!match) return null;
-          const digitsOnly = match[0].replace(/,/g, '');
-          return digitsOnly ? parseInt(digitsOnly, 10) : null;
+          return parseInt(match[0].replace(/,/g, ''), 10);
         };
 
-        for (const item of items) {
-          const label = item
-            .querySelector('.ipc-metadata-list-item__label')
-            ?.textContent
-            ?.trim() || '';
-          const value = item
-            .querySelector(
-              '.ipc-metadata-list-item__list-content-item, .ipc-metadata-list-item__content-container'
-            )
-            ?.textContent
-            ?.trim() || '';
-
+        for (const item of items as HTMLElement[]) {
+          const label = item.querySelector('.ipc-metadata-list-item__label')?.textContent?.trim() || '';
+          const value = item.querySelector('.ipc-metadata-list-item__list-content-item, .ipc-metadata-list-item__content-container')?.textContent?.trim() || '';
           if (/Budget/i.test(label)) {
-            res.budget = extractNumber(value);
-          } else if (/Gross US & Canada/i.test(label)) {
-            res.grossUSCanada = extractNumber(value);
-          } else if (/Opening weekend US & Canada/i.test(label)) {
-            res.openingWeekendUSCanada = extractNumber(value);
-          } else if (/Gross worldwide/i.test(label)) {
-            res.grossWorldwide = extractNumber(value);
+            return extractNumber(value);
           }
         }
-        return res;
+        return null;
       }
-    ).catch(() => ({
-      budget: null,
-      grossUSCanada: null,
-      openingWeekendUSCanada: null,
-      grossWorldwide: null,
-    }));
+    ).catch(() => null);
+  }
+
+  async scrapeGrossUSCanada(page: Page): Promise<number | null> {
+    await page.waitForSelector('[data-testid="title-boxoffice-section"]', { timeout: 15000 }).catch(() => null);
+
+    return page.$$eval(
+      '[data-testid="title-boxoffice-section"] .ipc-metadata-list__item',
+      (items) => {
+        const extractNumber = (text: string): number | null => {
+          const match = text.match(/[\d,]+/);
+          if (!match) return null;
+          return parseInt(match[0].replace(/,/g, ''), 10);
+        };
+
+        for (const item of items as HTMLElement[]) {
+          const label = item.querySelector('.ipc-metadata-list-item__label')?.textContent?.trim() || '';
+          const value = item.querySelector('.ipc-metadata-list-item__list-content-item, .ipc-metadata-list-item__content-container')?.textContent?.trim() || '';
+          if (/Gross US & Canada/i.test(label)) {
+            return extractNumber(value);
+          }
+        }
+        return null;
+      }
+    ).catch(() => null);
+  }
+
+  async scrapeOpeningWeekendUSCanada(page: Page): Promise<number | null> {
+    await page.waitForSelector('[data-testid="title-boxoffice-section"]', { timeout: 15000 }).catch(() => null);
+
+    return page.$$eval(
+      '[data-testid="title-boxoffice-section"] .ipc-metadata-list__item',
+      (items) => {
+        const extractNumber = (text: string): number | null => {
+          const match = text.match(/[\d,]+/);
+          if (!match) return null;
+          return parseInt(match[0].replace(/,/g, ''), 10);
+        };
+
+        for (const item of items as HTMLElement[]) {
+          const label = item.querySelector('.ipc-metadata-list-item__label')?.textContent?.trim() || '';
+          const value = item.querySelector('.ipc-metadata-list-item__list-content-item, .ipc-metadata-list-item__content-container')?.textContent?.trim() || '';
+          if (/Opening weekend US & Canada/i.test(label)) {
+            return extractNumber(value);
+          }
+        }
+        return null;
+      }
+    ).catch(() => null);
+  }
+
+  async scrapeGrossWorldwide(page: Page): Promise<number | null> {
+    await page.waitForSelector('[data-testid="title-boxoffice-section"]', { timeout: 15000 }).catch(() => null);
+
+    return page.$$eval(
+      '[data-testid="title-boxoffice-section"] .ipc-metadata-list__item',
+      (items) => {
+        const extractNumber = (text: string): number | null => {
+          const match = text.match(/[\d,]+/);
+          if (!match) return null;
+          return parseInt(match[0].replace(/,/g, ''), 10);
+        };
+
+        for (const item of items as HTMLElement[]) {
+          const label = item.querySelector('.ipc-metadata-list-item__label')?.textContent?.trim() || '';
+          const value = item.querySelector('.ipc-metadata-list-item__list-content-item, .ipc-metadata-list-item__content-container')?.textContent?.trim() || '';
+          if (/Gross worldwide/i.test(label)) {
+            return extractNumber(value);
+          }
+        }
+        return null;
+      }
+    ).catch(() => null);
   }
 }
