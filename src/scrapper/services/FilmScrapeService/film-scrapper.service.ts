@@ -16,7 +16,7 @@ export class FilmScrapperService {
       //'Chrome/114.0.0.0 Safari/537.36'
     //);
 
-    await page.goto('https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm', {
+    await page.goto('https://www.imdb.com/chart/top/?ref_=nv_mv_250', {
       waitUntil: 'networkidle2',
       timeout: 30_000,
     });
@@ -30,10 +30,10 @@ export class FilmScrapperService {
           .map(item => {
 
             //Parse Rank
-            const rankEl = item.querySelector(selectors.rank);
-            if (!rankEl) return null;
-            const label = rankEl.getAttribute('aria-label') || '';
-            const rank = parseInt(label.replace('Ranking ', ''), 10);
+            // const rankEl = item.querySelector(selectors.rank);
+            // if (!rankEl) return null;
+            // const label = rankEl.getAttribute('aria-label') || '';
+            // const rank = parseInt(label.replace('Ranking ', ''), 10);
 
             //Parse Title
             const titleEl = item.querySelector(selectors.titleText);
@@ -63,7 +63,6 @@ export class FilmScrapperService {
             const imdbRating = parseFloat(ratingText) || 0;
 
             return {
-              rank,
               title: titleEl?.textContent?.trim() ?? '',
               url:   urlEl?.href ?? null,
               year,

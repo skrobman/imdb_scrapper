@@ -19,8 +19,8 @@ import { BudgetScrapperService } from './services/BudgetScrapeService/budget-scr
 
 @Injectable()
 export class ScrapperService {
-  private readonly CACHE_KEY = 'scrapped-films';
-  private readonly CACHE_TTL = 600;
+  // private readonly CACHE_KEY = 'scrapped-films';
+  // private readonly CACHE_TTL = 600;
 
   constructor(
     private readonly filmScrapper: FilmScrapperService,
@@ -40,10 +40,10 @@ export class ScrapperService {
   ) {}
 
   async getFilms(): Promise<ScrappedMovieType[]> {
-    const cached = await this.redisClient.get(this.CACHE_KEY);
-    if (cached) {
-      return JSON.parse(cached) as ScrappedMovieType[];
-    }
+    // const cached = await this.redisClient.get(this.CACHE_KEY);
+    // if (cached) {
+    //   return JSON.parse(cached) as ScrappedMovieType[];
+    // }
 
     const films = await this.filmScrapper.scrapeTopFilms();
     const limit = pLimit(5);
@@ -118,12 +118,12 @@ export class ScrapperService {
       ),
     );
 
-    await this.redisClient.set(
-      this.CACHE_KEY,
-      JSON.stringify(films),
-      'EX',
-      this.CACHE_TTL,
-    );
+    // await this.redisClient.set(
+    //   this.CACHE_KEY,
+    //   JSON.stringify(films),
+    //   'EX',
+    //   this.CACHE_TTL,
+    // );
 
     return films;
   }
