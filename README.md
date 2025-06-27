@@ -1,98 +1,88 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<h1 style="text-align: center">Dokumentacja IMDB Scraper</h1>
+Przegląd
+IMDB Scraper to zaawansowana aplikacja Node.js zbudowana przy użyciu frameworka NestJS, zaprojektowana do automatycznego pobierania szczegółowych informacji o filmach z serwisu IMDb. Aplikacja przetwarza około 250 najlepiej ocenianych filmów z listy IMDb Top 250 i ekstraktuje kompleksowe dane dla każdego filmu.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h3>Funkcjonalności
+Scraper automatycznie zbiera następujące informacje o filmach:</h3>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Zbierane dane o filmie
 
-## Description
+Aplikacja pobiera i zapisuje następujące informacje o każdym filmie:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Podstawowe informacje o filmie
+- **Tytuł** – nazwa filmu
+- **Rok wydania** – rok premiery
+- **Czas trwania** – w minutach
+- **System klasyfikacji wiekowej** (np. R, PG-13)
+- **Ocena IMDb** – numeryczna ocena filmu
+- **URL IMDb** – bezpośredni link do filmu
 
-## Project setup
+### Zespół twórczy
+- **Reżyserzy** – lista reżyserów z ich nazwiskami
+- **Scenarzyści** – lista scenarzystów z pełnymi nazwiskami
 
-```bash
+### Obsada
+- **Główna obsada** – lista głównych aktorów z pełnymi nazwiskami
+
+### Szczegóły premiery
+- **Data premiery** – dokładna data wydania filmu
+- **Kraj premiery** – kraj pierwszej premiery
+
+### Języki i kraje produkcji
+- **Języki** – lista języków używanych w filmie
+- **Kraje pochodzenia** – lista krajów produkcji
+
+### Lokalizacje filmowe
+- **Miejsca kręcenia** – konkretne lokalizacje, miasta, kraje gdzie kręcono film
+
+### Firmy produkcyjne
+- **Wytwórnie filmowe** – lista firm odpowiedzialnych za produkcję
+
+### Informacje finansowe
+- **Budżet** – koszt produkcji w USD
+- **Wpływy USA/Kanada** – dochody z rynku północnoamerykańskiego
+- **Weekend otwarcia USA/Kanada** – wpływy z pierwszego weekendu
+- **Wpływy światowe** – całkowite dochody na świecie
+
+<h2>Instalacja zależności:</h2>
+
+```bash  
+$ npm install -g @nestjs/cli
+```
+
+```bash  
 $ npm install
 ```
 
-## Compile and run the project
+```bash  
+$ npx install chromium
+```
 
-```bash
-# development
-$ npm run start
-
-# watch mode
+<h2>Uruchomienie aplikacji:</h2>
+```bash  
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Run tests
+<h2>Aby upewnić się, że aplikacja została uruchomiona, w konsoli powinien pojawić się następujący tekst:</h2>
+<img src="doc_img/Снимок.PNG" alt="First page">
 
-```bash
-# unit tests
-$ npm run test
+<h2>
+Następnie wpisujemy w pasku adresu przeglądarki:</h2>
 
-# e2e tests
-$ npm run test:e2e
+<h3><a>localhost:3000/api</a></h3>
 
-# test coverage
-$ npm run test:cov
-```
+<h2>Wyświetli się ta strona:</h2>
 
-## Deployment
+<img src="doc_img/main%20page.PNG" alt="First page">
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+<h2>Aby zeskrapować dane, wykonaj następujące kroki:</h2>
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+<img src="doc_img/first.PNG" alt="First page">
+<img src="doc_img/second.PNG" alt="First page">
+<h2>Proces może potrwać od 5 do 10 minut, w zależności od szybkości połączenia internetowego.</h2>
+<h2>Jeśli proces przebiegnie pomyślnie, otrzymamy rezultat w formacie JSON:</h2>
+<img src="doc_img/200-scrapper.PNG" alt="First page">
+<h2>Możemy zapisać otrzymane dane jako plik JSON lub CSV (ale należy to zrobić w ciągu 10 minut – właśnie tyle czasu są one przechowywane w cookie)</h2>
+<img src="doc_img/Снимок2.PNG" alt="First page">
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+<h2>Aby otworzyć analizę tych danych, otwieramy plik final_project.pbix.</h2>
